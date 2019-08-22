@@ -32,7 +32,7 @@ public class BarScan extends AppCompatActivity {
         server_chat = new Server_chat();
         server_chat.connser();
 
-        mMyAdapter = new MyAdapter();// 어댑터 등록
+        mMyAdapter = new MyAdapter();   // 어댑터 등록
         brscan = new IntentIntegrator(this);
 
         brscan.setPrompt("scanning");
@@ -46,6 +46,9 @@ public class BarScan extends AppCompatActivity {
             //qr,barcode 가 없으면
             if (result.getContents() == null) {
                 Toast.makeText(BarScan.this, "취소", Toast.LENGTH_SHORT).show(); //toast 메세지
+                Intent intent = new Intent(BarScan.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             } else {
                 try {
                     JSONObject obj = new JSONObject(result.getContents());
@@ -53,16 +56,19 @@ public class BarScan extends AppCompatActivity {
                     e.printStackTrace();
                     getData = result.getContents(); //바코드 값 저장
                     String bar_code = String.valueOf(getData); //스트링 형으로 변환
-                    server_chat.senddata(bar_code);
-                    receive = String.valueOf(Server_chat.receive);
-                    Intent intent = new Intent(BarScan.this, ShoppingList.class);
-                    intent.putExtra("barcode",receive);
+                    server_chat.senddata(bar_code); //server_chat 의 함수 senddata 에 변수 bar_code를 넣어 실행
+                    receive = String.valueOf(Server_chat.receive);  // Server_chat의 receive 데이터를 스트링형으로 변환
+                    Intent intent = new Intent(BarScan.this, MainActivity.class);   // ShoppingList로 화면전환
+                    intent.putExtra("barcode",bar_code); // barcode 에 receive 를 저장해서 데이터를 ShoppingList에 보냄
                     startActivity(intent);
                     finish();
                 }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data); //onActivityResult 에서 requestCode,resultCode,data를 받아옴
+
         }
     }
+
 }
+

@@ -72,7 +72,6 @@ public class Listview extends AppCompatActivity implements BeaconConsumer{
         lv_1 = (ListView) findViewById(R.id.listview_1);
         btn1 = (Button)findViewById(R.id.btn1);
         sendbt = (Button)findViewById(R.id.sendbt);
-        sendms = (EditText) findViewById(R.id.sendms);
         textData = (TextView)findViewById(R.id.textData);
         recieveData = (TextView)findViewById(R.id.recieveData);
 
@@ -102,15 +101,6 @@ public class Listview extends AppCompatActivity implements BeaconConsumer{
             }
         });
 
-        sendbt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String data = sendms.getText().toString(); //입력한 데이터를 String형으로 변환
-                sendms.setText(null);   //공백으로
-                socketTask.SendDataToNetwork(data); //data를 소켓방식으로 서버에 전송
-            }
-        });
-
         // 실제로 비콘을 탐지하기 위한 비콘매니저 객체를 초기화
         beaconManager = BeaconManager.getInstanceForApplication(this);
 
@@ -120,7 +110,7 @@ public class Listview extends AppCompatActivity implements BeaconConsumer{
         beaconManager.bind(this);
         handler.sendEmptyMessage(0);
 
-        socketTask.execute();
+        //socketTask.execute();
     }
 
     class ItemAdapter extends BaseAdapter {
@@ -172,12 +162,53 @@ public class Listview extends AppCompatActivity implements BeaconConsumer{
                     getData = result.getContents();
                     String numInt = String.valueOf(getData);
                     if(numInt.equals("12345670")) {
-                        adapter.addItem(new item("당근", 1000, 1, R.drawable.carrot));
+                        adapter.addItem(new item("당근", 1500, 1, R.drawable.carrot));
                         lv_1.setAdapter(adapter);
 
                     }else if(numInt.equals("23456716")){
-                        adapter.addItem(new item("사과", 1500, 1, R.drawable.apple));
+                        adapter.addItem(new item("사과", 100, 1, R.drawable.apple));
                         lv_1.setAdapter(adapter);
+
+                    }else if(numInt.equals("34567838")){
+                        adapter.addItem(new item("바나나", 4000, 1, R.drawable.banana));
+                        lv_1.setAdapter(adapter);
+
+                    }else if(numInt.equals("47723214")){
+                        adapter.addItem(new item("옥수수", 1000, 1, R.drawable.corn));
+                        lv_1.setAdapter(adapter);
+
+                    }else if(numInt.equals("61234215")){
+                        adapter.addItem(new item("포도", 2000, 1, R.drawable.grapes));
+                        lv_1.setAdapter(adapter);
+
+                    }else if(numInt.equals("45671111")){
+                        adapter.addItem(new item("멜론", 6000, 1, R.drawable.melon));
+                        lv_1.setAdapter(adapter);
+
+                    }else if(numInt.equals("14121418")){
+                        adapter.addItem(new item("복숭아", 800, 1, R.drawable.peach));
+                        lv_1.setAdapter(adapter);
+
+                    }else if(numInt.equals("13461515")){
+                        adapter.addItem(new item("싱싱한 오징어", 5000, 1, R.drawable.squid));
+                        lv_1.setAdapter(adapter);
+
+                    }else if(numInt.equals("35612124")){
+                        adapter.addItem(new item("딸기", 4000, 1, R.drawable.strawberry));
+                        lv_1.setAdapter(adapter);
+
+                    }else if(numInt.equals("51231422")){
+                        adapter.addItem(new item("즉석떡볶이", 4850, 1, R.drawable.tteokbokki));
+                        lv_1.setAdapter(adapter);
+
+                    }else if(numInt.equals("25231137")){
+                        adapter.addItem(new item("수박", 7000, 1, R.drawable.watermelon));
+                        lv_1.setAdapter(adapter);
+
+                    }else if(numInt.equals("45121234")){
+                        adapter.addItem(new item("한우 한 근", 700, 1, R.drawable.hanwoo));
+                        lv_1.setAdapter(adapter);
+
                     }else{
                          Toast.makeText(Listview.this,"없는 바코드",Toast.LENGTH_SHORT).show();
                     }
@@ -210,7 +241,6 @@ public class Listview extends AppCompatActivity implements BeaconConsumer{
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                 sendbt.setVisibility(View.VISIBLE); //sendbt 가 보여진다
-                sendms.setVisibility(View.VISIBLE); //sendms 가 보여진다
                 textData.setVisibility(View.VISIBLE); //textData가 보여진다
             } catch (Exception e){ //에러처리
                 e.printStackTrace(); //에러 메세지의 발생, 근원을 찾아 단계별로 에러 출력

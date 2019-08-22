@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
 import static android.os.StrictMode.setThreadPolicy;
 
 public class MainActivity extends AppCompatActivity implements BeaconConsumer{
@@ -62,6 +64,16 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer{
         beaconManager.bind((BeaconConsumer) this);
         handler.sendEmptyMessage(0);
 
+        try {
+            Intent intent = getIntent();
+            barcode = intent.getExtras().getString("barcode");
+            if (barcode != null) {
+                Toast.makeText(this,"바코드받음" + barcode,Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         //프래그먼트------------------------
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
 
@@ -85,29 +97,27 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer{
                     }
                     case R.id.navigation_menu3: {
                         transaction.replace(R.id.frame_layout, menu3Fragment).commitAllowingStateLoss();
+                        Bundle bundle = new Bundle();
+                        try{
+                            Log.i("barcode : ",barcode);
+                        bundle.putString("param1", barcode);}
+                        catch (Exception e){
+                            e.printStackTrace();
+                        }
                         break;
                     }
                     case R.id.navigation_menu4: {
                         transaction.replace(R.id.frame_layout, menu4Fragment).commitAllowingStateLoss();
                         break;
-                }}
-
+                    }
+                }
                 return true;
             }
         });
         //프래그먼트-----------------------------
-        try {
-            Intent intent = getIntent();
-            barcode = intent.getExtras().getString("barcode");
-            if (barcode != null) {
-                Toast.makeText(this,"받음" + barcode,Toast.LENGTH_SHORT).show();
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
 
     }
-
 
     //비콘 스캐너 부분
     @Override
@@ -115,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer{
         super.onDestroy();
         beaconManager.unbind( this);
     }
-
 
     public void onBeaconServiceConnect() {
         beaconManager.setRangeNotifier(new RangeNotifier() {
@@ -139,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer{
         }
     }
 
-
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             // 비콘의 거리 측정
@@ -161,3 +169,4 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer{
         }
     };
 }
+
